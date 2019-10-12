@@ -2,10 +2,19 @@ package com.lambda;
 
 public class Transaction {
 
+    /**
+     * 交易人
+     */
     private Trader trader;
 
+    /**
+     * 交易时间（年）
+     */
     private int year;
 
+    /**
+     * 交易额
+     */
     private int value;
 
     public Transaction(Trader trader, int year, int value) {
