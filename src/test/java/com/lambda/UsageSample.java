@@ -8,6 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.comparingInt;
@@ -268,11 +269,20 @@ public class UsageSample {
     }
 
     /**
+     * 生成斐波那契数列的前20个
      *
+     * 输出：
+     * total size: 20
+     * [0, 1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584, 4181]
      */
     @Test
     public void test13() {
-
+        List<Integer> collect = Stream.iterate(new int[]{0, 1}, t -> new int[]{t[1], t[0] + t[1]})
+                .limit(20)
+                .map(t -> t[0])
+                .collect(toList());
+        System.out.println("total size: " + collect.size());
+        System.out.println(collect);
     }
 
     /**
