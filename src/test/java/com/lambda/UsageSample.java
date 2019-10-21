@@ -17,6 +17,18 @@ import static java.util.stream.Collectors.toList;
 @RunWith(MockitoJUnitRunner.class)
 public class UsageSample {
 
+    /**
+     * Predicate<T>               T->boolean
+     * Consumer<T>                T->void
+     * Function<T,R>              T->R
+     * Supplier<T>               ()->T
+     * UnaryOperator<T>          T->T
+     * BinaryOperator<T>        (T,T)->T
+     * BiPredicate<L,R>         (L,R)->boolean
+     * BiConsumer<T,U>          (T,U)->void
+     * BiFunction<T,U,R>        (T,U)->R
+     */
+
     private List<Transaction> transactions;
     private List<Dish> menu;
 
@@ -25,6 +37,7 @@ public class UsageSample {
         Trader jack = new Trader("Jack", "Alaska");
         Trader tom = new Trader("Tom", "Boston");
         Trader teddy = new Trader("Teddy", "Cambridge");
+        Trader teddy1 = new Trader("Teddy", "Cambridge");
         Trader ward = new Trader("Ward", "Cambridge");
         Trader mack = new Trader("Mack", "Hawaii");
         Trader richard = new Trader("Richard", "Cambridge");
@@ -33,6 +46,7 @@ public class UsageSample {
                 new Transaction(jack, 2018, 300),
                 new Transaction(tom, 2019, 1000),
                 new Transaction(teddy, 2018, 400),
+                new Transaction(teddy1, 2018, 400),
                 new Transaction(ward, 2019, 710),
                 new Transaction(mack, 2019, 700),
                 new Transaction(richard, 2018, 950));
@@ -114,7 +128,18 @@ public class UsageSample {
         List<Trader> traderList = transactions.stream()
                 .map(Transaction::getTrader)
                 .filter(t -> t.getCity().equals("Cambridge"))
-                .distinct()
+                .distinct()                 //类的distinct()是根据equals()方法工作的，因此需覆写equals()方法（覆写equals()需同时覆写hashCode()）
+                .sorted(comparing(Trader::getName))
+                .collect(toList());
+        traderList.forEach(System.out::println);
+    }
+
+    @Test
+    public void test4_01() {
+        List<Trader> traderList = transactions.stream()
+                .map(Transaction::getTrader)
+                .filter(t -> t.getCity().equals("Cambridge"))
+                .filter(Trader.distinctByKey(Trader::getName))       //不使用distinct()进行去重
                 .sorted(comparing(Trader::getName))
                 .collect(toList());
         traderList.forEach(System.out::println);
