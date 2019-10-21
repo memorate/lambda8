@@ -125,24 +125,25 @@ public class UsageSample {
      */
     @Test
     public void test4() {
-        List<Trader> traderList = transactions.stream()
+        //类根据某一属性进行去重方式一
+        transactions.stream()
                 .map(Transaction::getTrader)
                 .filter(t -> t.getCity().equals("Cambridge"))
                 .distinct()                 //类的distinct()是根据equals()方法工作的，因此需覆写equals()方法（覆写equals()需同时覆写hashCode()）
                 .sorted(comparing(Trader::getName))
-                .collect(toList());
-        traderList.forEach(System.out::println);
-    }
+                .collect(toList())
+                .forEach(System.out::println);
 
-    @Test
-    public void test4_01() {
-        List<Trader> traderList = transactions.stream()
+        System.out.println();
+
+        //类根据某一属性进行去重方式二(推荐)
+        transactions.stream()
                 .map(Transaction::getTrader)
                 .filter(t -> t.getCity().equals("Cambridge"))
                 .filter(Trader.distinctByKey(Trader::getName))       //不使用distinct()进行去重
                 .sorted(comparing(Trader::getName))
-                .collect(toList());
-        traderList.forEach(System.out::println);
+                .collect(toList())
+                .forEach(System.out::println);
     }
 
     /**
@@ -214,7 +215,6 @@ public class UsageSample {
      *
      * 输出：
      * 1000
-     * 1000
      */
     @Test
     public void test9() {
@@ -235,7 +235,6 @@ public class UsageSample {
      * 找到交易额最小的交易
      *
      * 输出：
-     * Transaction{trader=Trader{name='Jack', city='Alaska'}, year=2018, value=300}
      * Transaction{trader=Trader{name='Jack', city='Alaska'}, year=2018, value=300}
      */
     @Test
@@ -260,9 +259,9 @@ public class UsageSample {
      */
     @Test
     public void test11() {
-        List<Integer> collect = IntStream.rangeClosed(1, 100)
+        List<Integer> collect = IntStream.rangeClosed(1, 100)       //生成的数据为int类型
                 .filter(n -> n % 2 == 0)
-                .boxed()
+                .boxed()               //List是一个泛型类，泛型不能是简单类型，所以需要装箱成Integer
                 .collect(toList());
         System.out.println(collect);
     }
